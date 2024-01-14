@@ -40,6 +40,7 @@
             btnThem = new Button();
             btnXoa = new Button();
             btnSua = new Button();
+            btnGvien = new Button();
             ((System.ComponentModel.ISupportInitialize)gvHsinh).BeginInit();
             SuspendLayout();
             // 
@@ -75,6 +76,7 @@
             gvHsinh.RowHeadersWidth = 51;
             gvHsinh.Size = new Size(499, 262);
             gvHsinh.TabIndex = 4;
+            gvHsinh.CellClick += gvHsinh_CellClick;
             // 
             // txtAddress
             // 
@@ -147,11 +149,23 @@
             btnSua.UseVisualStyleBackColor = true;
             btnSua.Click += sua_hs_Click;
             // 
+            // btnGvien
+            // 
+            btnGvien.AccessibleRole = AccessibleRole.Sound;
+            btnGvien.Location = new Point(698, 384);
+            btnGvien.Name = "btnGvien";
+            btnGvien.Size = new Size(94, 29);
+            btnGvien.TabIndex = 13;
+            btnGvien.Text = "Giao Vien";
+            btnGvien.UseVisualStyleBackColor = true;
+            btnGvien.Click += btnGvien_Click;
+            // 
             // FHocSinh
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(970, 450);
+            Controls.Add(btnGvien);
             Controls.Add(btnSua);
             Controls.Add(btnXoa);
             Controls.Add(btnThem);
@@ -186,5 +200,6 @@
         private Button btnThem;
         private Button btnXoa;
         private Button btnSua;
+        private Button btnGvien;
     }
 }

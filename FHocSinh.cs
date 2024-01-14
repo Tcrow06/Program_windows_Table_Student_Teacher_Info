@@ -33,14 +33,34 @@ namespace ThucHanh1
 
             finally { conn.Close(); }
         }
+        private void LoadData()
+        {
+            try
+            {
+                conn.Open();
+                string sqlString = string.Format("Select*from HocSinh");
+                SqlDataAdapter adapter = new SqlDataAdapter(sqlString, conn);
+                DataTable dtSinhVien = new DataTable();
+                adapter.Fill(dtSinhVien);
+                gvHsinh.DataSource = dtSinhVien;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally { conn.Close(); }
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             try
             {
                 //Ket noi 
                 conn.Open();
-                //string.sqlStr = string.Format("insert into HocSinh(Ten")
-                string sqlStr = string.Format("insert into HocSinh(Ten, Diachi, Cmnd, Nsinh) Values('{0}', '{1}', '{2}', {3})", txtName.Text, txtAddress.Text, txtCmnd.Text, dtpDate);
+    
+                DateTime ns = Convert.ToDateTime(dtpDate.Value);
+                string nsinh = ns.ToString("yyyy-MM-dd");
+                string sqlStr = string.Format("insert into HocSinh(Ten, Diachi, Cmnd, Nsinh) Values('{0}', '{1}', '{2}', '{3}')", txtName.Text, txtAddress.Text, txtCmnd.Text, nsinh);
                 SqlCommand cmd = new SqlCommand(sqlStr, conn);
                 if (cmd.ExecuteNonQuery() > 0)
                 {
@@ -53,16 +73,21 @@ namespace ThucHanh1
                 MessageBox.Show("them that bai " + ex);
             }
 
-            finally { conn.Close(); }
+            finally
+            {
+                conn.Close();
+                LoadData();
+
+            }
         }
         private void button2_Click(object sender, EventArgs e)
         {
             try
             {
                 conn.Open();
-            string sqlStr = string.Format("delete from HocSinh where Cmnd = {0}", txtCmnd.Text);
-            SqlCommand cmd = new SqlCommand(sqlStr, conn);
-            
+                string sqlStr = string.Format("delete from HocSinh where Cmnd = '{0}'", txtCmnd.Text);
+                SqlCommand cmd = new SqlCommand(sqlStr, conn);
+
                 if (cmd.ExecuteNonQuery() > 0)
                 {
                     MessageBox.Show("Xoa thanh cong");
@@ -72,7 +97,11 @@ namespace ThucHanh1
             {
                 MessageBox.Show("Xoa that bai " + ex);
             }
-            finally { conn.Close(); }
+            finally
+            {
+                conn.Close();
+                LoadData();
+            }
         }
 
         private void sua_hs_Click(object sender, EventArgs e)
@@ -84,15 +113,39 @@ namespace ThucHanh1
                 string nsinh = ns.ToString("yyyy-MM-dd");
                 string sqlString = string.Format("update HocSinh set Ten='{0}', Diachi='{1}',Nsinh='{2}' where Cmnd='{3}'", txtName.Text, txtAddress.Text, nsinh, txtCmnd.Text);
                 SqlCommand cmd = new SqlCommand(sqlString, conn);
-                if(cmd.ExecuteNonQuery() > 0)
+                if (cmd.ExecuteNonQuery() > 0)
                 {
                     MessageBox.Show("Sua thanh cong");
                 }
 
-            }catch(Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 MessageBox.Show("Sua that bai " + ex);
             }
-            finally { conn.Close(); }
+            finally
+            {
+                conn.Close();
+                LoadData();
+            }
+        }
+
+        private void gvHsinh_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            txtName.Text = gvHsinh.Rows[gvHsinh.CurrentCell.RowIndex].Cells[0].Value.ToString();
+            txtAddress.Text = gvHsinh.Rows[gvHsinh.CurrentCell.RowIndex].Cells[1].Value.ToString();
+            txtCmnd.Text = gvHsinh.Rows[gvHsinh.CurrentCell.RowIndex].Cells[2].Value.ToString();
+            dtpDate.Text = gvHsinh.Rows[gvHsinh.CurrentCell.RowIndex].Cells[3].Value.ToString();
+        }
+
+        private void btnGvien_Click(object sender, EventArgs e)
+        {
+            FGiaoVien? fgv = new FGiaoVien();
+            this.Hide();
+            fgv.ShowDialog();
+            fgv = null;
+            this.Show();
+
         }
     }
 
